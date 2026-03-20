@@ -11,7 +11,7 @@ import { EnrollmentService } from "./src/domain/enrollmentService.js";
 import { EventEmitter } from "./src/infrastructure/eventsEmitter.js";
 import type { DomainEventMap } from "./src/domain/events.js";
 
-// ── Setup ────────────────────────────────────────
+//Setup 
 
 const emitter = new EventEmitter();
 
@@ -39,9 +39,9 @@ function must<T>(result: T | Error, label: string): T {
   return result;
 }
 
-// ── SCENARIO 1: Successful enrollment ────────────
+//SCENARIO 1: Successful enrollment
 
-console.log("\n========== SCENARIO 1: Successful Enrollment ==========\n");
+console.log("\n SCENARIO 1: Successful Enrollment\n");
 
 const alice = must(
   Student.create(
@@ -72,9 +72,9 @@ if (enroll1 instanceof Error) {
   console.log("  OK: Enrolled", enroll1.id);
 }
 
-// ── SCENARIO 2: Course reaches 80% capacity ──────
+// SCENARIO 2: Course reaches 80% capacity
 
-console.log("\n========== SCENARIO 2: Course Reaches 80% ==========\n");
+console.log("\nSCENARIO 2: Course Reaches 80% \n");
 
 const smallCourse = must(
   Course.create(
@@ -108,9 +108,9 @@ for (let i = 2; i <= 5; i++) {
   }
 }
 
-// ── SCENARIO 3: Course becomes full ──────────────
+//SCENARIO 3: Course becomes full
 
-console.log("\n========== SCENARIO 3: Course Becomes Full ==========\n");
+console.log("\n SCENARIO 3: Course Becomes Full \n");
 
 const stu6 = must(
   Student.create(
@@ -131,9 +131,9 @@ if (fullResult instanceof Error) {
   );
 }
 
-// ── SCENARIO 4: Student exceeds 18 credits ───────
+//SCENARIO 4: Student exceeds 18 credits
 
-console.log("\n========== SCENARIO 4: Exceeds 18 Credits ==========\n");
+console.log("\n SCENARIO 4: Exceeds 18 Credits \n");
 
 // Alice has 3 credits from CS101, add more courses to reach 18
 const extraCourses = [
@@ -184,9 +184,9 @@ if (overflow instanceof Error) {
   console.log("  UNEXPECTED: This should not happen");
 }
 
-// ── SCENARIO 5: Cancel an enrollment ─────────────
+//SCENARIO 5: Cancel an enrollment
 
-console.log("\n========== SCENARIO 5: Cancel Enrollment ==========\n");
+console.log("\n SCENARIO 5: Cancel Enrollment \n");
 
 if (!(enroll1 instanceof Error)) {
   console.log(`  Cancelling ${enroll1.id}...`);
@@ -197,5 +197,3 @@ if (!(enroll1 instanceof Error)) {
     console.log(`  OK: Cancelled. Alice credits now: ${alice.enrolledCredits}`);
   }
 }
-
-console.log("\n========== All 5 scenarios complete ==========\n");
