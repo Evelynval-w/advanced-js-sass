@@ -1,10 +1,13 @@
 import {
-  createStudentId, createCourseCode, createEmail,
-  createCredits, createSemester
+  createStudentId,
+  createCourseCode,
+  createEmail,
+  createCredits,
+  createSemester,
 } from "./src/domain/brands.js";
 import { Student } from "./src/domain/student.js";
 import { Course } from "./src/domain/course.js";
-import { EnrollmentService } from "./src/infrastructure/eventsEmitter.js";
+import { EnrollmentService } from "./src/domain/enrollmentService.js";
 import { EventEmitter } from "./src/infrastructure/eventsEmitter.js";
 import type { DomainEventMap } from "./src/domain/events.js";
 
@@ -14,8 +17,10 @@ const emitter = new EventEmitter();
 
 // Log every event that fires
 const eventTypes: (keyof DomainEventMap)[] = [
-  "StudentEnrolled", "EnrollmentCancelled",
-  "CourseCapacityReached", "CourseFull"
+  "StudentEnrolled",
+  "EnrollmentCancelled",
+  "CourseCapacityReached",
+  "CourseFull",
 ];
 
 for (const eventType of eventTypes) {
@@ -42,8 +47,9 @@ const alice = must(
   Student.create(
     must(createStudentId("STU000001"), "id"),
     "Alice Martin",
-    must(createEmail("alice@epita.fr"), "email")
-  ), "student"
+    must(createEmail("alice@epita.fr"), "email"),
+  ),
+  "student",
 );
 
 const csDDD = must(
@@ -51,8 +57,9 @@ const csDDD = must(
     must(createCourseCode("CS101"), "code"),
     "Domain-Driven Design",
     must(createCredits(3), "credits"),
-    30
-  ), "course"
+    30,
+  ),
+  "course",
 );
 
 service.registerStudent(alice);
@@ -74,8 +81,9 @@ const smallCourse = must(
     must(createCourseCode("WEB201"), "code"),
     "Advanced Web Dev",
     must(createCredits(2), "credits"),
-    5
-  ), "course"
+    5,
+  ),
+  "course",
 );
 service.registerCourse(smallCourse);
 
@@ -85,15 +93,18 @@ for (let i = 2; i <= 5; i++) {
     Student.create(
       must(createStudentId(`STU${padded}`), "id"),
       `Student ${i}`,
-      must(createEmail(`student${i}@epita.fr`), "email")
-    ), "student"
+      must(createEmail(`student${i}@epita.fr`), "email"),
+    ),
+    "student",
   );
   service.registerStudent(stu);
   const res = service.enroll(stu.id, smallCourse.code, semester);
   if (res instanceof Error) {
     console.log(`  FAIL Student ${i}:`, res.message);
   } else {
-    console.log(`  OK: Student ${i} enrolled (${smallCourse.enrolledCount}/${smallCourse.capacity})`);
+    console.log(
+      `  OK: Student ${i} enrolled (${smallCourse.enrolledCount}/${smallCourse.capacity})`,
+    );
   }
 }
 
@@ -105,8 +116,9 @@ const stu6 = must(
   Student.create(
     must(createStudentId("STU000006"), "id"),
     "Student 6",
-    must(createEmail("student6@epita.fr"), "email")
-  ), "student"
+    must(createEmail("student6@epita.fr"), "email"),
+  ),
+  "student",
 );
 service.registerStudent(stu6);
 
@@ -114,7 +126,9 @@ const fullResult = service.enroll(stu6.id, smallCourse.code, semester);
 if (fullResult instanceof Error) {
   console.log("  FAIL:", fullResult.message);
 } else {
-  console.log(`  OK: Student 6 enrolled (${smallCourse.enrolledCount}/${smallCourse.capacity})`);
+  console.log(
+    `  OK: Student 6 enrolled (${smallCourse.enrolledCount}/${smallCourse.capacity})`,
+  );
 }
 
 // ── SCENARIO 4: Student exceeds 18 credits ───────
@@ -135,8 +149,9 @@ for (const c of extraCourses) {
       must(createCourseCode(c.code), "code"),
       c.name,
       must(createCredits(c.credits), "credits"),
-      50
-    ), "course"
+      50,
+    ),
+    "course",
   );
   service.registerCourse(course);
   const res = service.enroll(alice.id, course.code, semester);
@@ -153,12 +168,15 @@ const artCourse = must(
     must(createCourseCode("ART100"), "code"),
     "Art History",
     must(createCredits(2), "credits"),
-    50
-  ), "course"
+    50,
+  ),
+  "course",
 );
 service.registerCourse(artCourse);
 
-console.log(`\n  Trying ART100 (2 credits) with ${alice.enrolledCredits} current credits...`);
+console.log(
+  `\n  Trying ART100 (2 credits) with ${alice.enrolledCredits} current credits...`,
+);
 const overflow = service.enroll(alice.id, artCourse.code, semester);
 if (overflow instanceof Error) {
   console.log("  EXPECTED FAIL:", overflow.message);
